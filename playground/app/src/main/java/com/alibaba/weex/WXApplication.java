@@ -38,6 +38,7 @@ import com.alibaba.weex.extend.module.WXEventModule;
 import com.alibaba.weex.extend.module.WXTitleBar;
 import com.alibaba.weex.extend.module.WXWsonTestModule;
 import com.alibaba.weex.yzh.MyDefaultWXStorage;
+import com.alibaba.weex.yzh.MyMask;
 import com.alibaba.weex.yzh.OkHttpWXHttpAdapter;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.taobao.weex.InitConfig;
@@ -92,7 +93,8 @@ public class WXApplication extends Application {
             WXSDKEngine.registerModule("event", WXEventModule.class);
             WXSDKEngine.registerModule("syncTest", SyncTestModule.class);
 
-            WXSDKEngine.registerComponent("mask", WXMask.class);
+//            WXSDKEngine.registerComponent("mask", WXMask.class);
+            WXSDKEngine.registerComponent("mask", MyMask.class);
             WXSDKEngine.registerModule("myModule", MyModule.class);
             WXSDKEngine.registerModule("geolocation", GeolocationModule.class);
 

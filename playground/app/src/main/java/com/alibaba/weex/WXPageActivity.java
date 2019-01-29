@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -54,18 +54,15 @@ import com.alibaba.weex.https.WXHttpTask;
 import com.alibaba.weex.https.WXRequestListener;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.RenderContainer;
-import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
-import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.IWXDebugProxy;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.ui.component.NestedContainer;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.utils.WXFileUtils;
-import com.taobao.weex.utils.WXJsonUtils;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.File;
@@ -607,4 +604,23 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
       }
     }
   }
+
+  @Override
+  public boolean dispatchKeyEvent(KeyEvent event) {
+    if (mOnDispatchKeyEventListener != null) {
+      return mOnDispatchKeyEventListener.dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
+    }
+    return super.dispatchKeyEvent(event);
+  }
+
+  private OnDispatchKeyEventListener mOnDispatchKeyEventListener;
+
+  public void setOnDispatchKeyEventListener(OnDispatchKeyEventListener onDispatchKeyEventListener) {
+    mOnDispatchKeyEventListener = onDispatchKeyEventListener;
+  }
+
+  public interface OnDispatchKeyEventListener {
+    boolean dispatchKeyEvent(KeyEvent event);
+  }
+
 }

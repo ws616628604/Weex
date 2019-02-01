@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +18,7 @@
  */
 package com.alibaba.weex.yzh;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
@@ -25,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.alibaba.weex.WXPageActivity;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.ui.action.BasicComponentData;
@@ -40,7 +40,7 @@ public class MyMask extends WXVContainer {
     private View.OnLayoutChangeListener mOnLayoutChangeListener;
     private ViewGroup mParent;
     private FrameLayout mFrameLayout;
-    private WXPageActivity mActivity;
+    private Activity mActivity;
 
     public MyMask(WXSDKInstance instance, WXVContainer parent, BasicComponentData basicComponentData) {
         super(instance, parent, basicComponentData);
@@ -48,17 +48,16 @@ public class MyMask extends WXVContainer {
 
     @Override
     protected View initComponentHostView(@NonNull Context context) {
-        if (context instanceof WXPageActivity) {
+        if (context instanceof Activity) {
             fireVisibleChangedEvent(true);
-            mActivity = (WXPageActivity) context;
+            mActivity = (Activity) context;
             mParent = (ViewGroup) mActivity.findViewById(android.R.id.content);
             mFrameLayout = new FrameLayout(context);
 
             mParent.addView(mFrameLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-            mActivity.setOnDispatchKeyEventListener(new WXPageActivity.OnDispatchKeyEventListener() {
+            mFrameLayout.setOnKeyListener(new View.OnKeyListener() {
                 @Override
-                public boolean dispatchKeyEvent(KeyEvent event) {
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 
                         fireVisibleChangedEvent(false);
@@ -67,6 +66,9 @@ public class MyMask extends WXVContainer {
                     return false;
                 }
             });
+            mFrameLayout.setFocusable(true);
+            mFrameLayout.setFocusableInTouchMode(true);
+            mFrameLayout.requestFocus();
             mOnLayoutChangeListener = new View.OnLayoutChangeListener() {
                 @Override
                 public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -101,7 +103,6 @@ public class MyMask extends WXVContainer {
         fireVisibleChangedEvent(false);
         mParent.removeView(mFrameLayout);
         mParent.removeOnLayoutChangeListener(mOnLayoutChangeListener);
-        mActivity.setOnDispatchKeyEventListener(null);
     }
 
     private void fireVisibleChangedEvent(boolean visible) {
